@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  lab_tests_parser:
+    build:
+      context: ./lab_tests_parser
+      dockerfile: Dockerfile
+    volumes:
+      - ./lab_tests_parser:/app
+      - ./lab_tests_parser/output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: ["python", "parser.py"]
+
+  gpt_analyzer:
+    build:
+      context: ./gpt_analyzer
+      dockerfile: Dockerfile
+    depends_on:
+      - lab_tests_parser  # Ensure this service starts after lab_tests_parser
+    volumes:
+      - ./gpt_analyzer:/app
+      - ./lab_tests_parser/output:/app/output  # Share the output directory
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: ["sh", "-c", "./wait_for_file.sh /app/output/tests_list.csv && python analyzer.py"]
