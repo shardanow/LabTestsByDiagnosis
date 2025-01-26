@@ -1,0 +1,2 @@
+gpt_analyzer - used for analyzing user symptoms and providing a list of possible diseases and possible tests to be done from the available list.
+lab_tests_parser - used for parsing the available lab tests from sinevo website.
